@@ -50,7 +50,6 @@ public class CompanySetImpl implements Company {
                 .filter(employee -> employee.getId() == id)
                 .findFirst()
                 .orElse(null);
-
     }
 
     // O(n)
@@ -61,9 +60,16 @@ public class CompanySetImpl implements Company {
 //            res += employee.calcSalary();
 //        }
 //        return res;
+
+
+//        return employees.stream()
+//                .map(Employee::calcSalary)
+//                .reduce(0., (a, b) -> a + b);
+
         return employees.stream()
-                .map(Employee::calcSalary)
-                .reduce(0., (a, b) -> a + b);
+                .mapToDouble(e -> e.calcSalary())
+//                .map(Employee::calcSalary)
+                .sum();
     }
 
     // O(1)
@@ -83,11 +89,19 @@ public class CompanySetImpl implements Company {
 //            }
 //        }
 //        return res;
+
+
+//        return employees.stream()
+//                .filter(e -> e instanceof SalesManager)
+//                .map(e -> (SalesManager) e)
+//                .map(SalesManager::getSalesValue)
+//                .reduce(0., (a, b) -> a + b);
+
         return employees.stream()
                 .filter(e -> e instanceof SalesManager)
                 .map(e -> (SalesManager) e)
-                .map(SalesManager::getSalesValue)
-                .reduce(0., (a, b) -> a + b);
+                .mapToDouble(s -> s.getSalesValue())
+                .summaryStatistics().getSum();
     }
 
     // O(n)
