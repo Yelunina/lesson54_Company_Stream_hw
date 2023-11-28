@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class CompanySetImpl implements Company{
+public class CompanySetImpl implements Company {
     private Set<Employee> employees;
     private int capacity;
 
@@ -47,8 +47,9 @@ public class CompanySetImpl implements Company{
 //        }
 //        return null;
         return employees.stream()
-                .map(Employee::getId)
-                .map(employee -> if (employee.getId() == id));
+                .filter(employee -> employee.getId() == id)
+                .findFirst()
+                .orElse(null);
 
     }
 
@@ -62,7 +63,7 @@ public class CompanySetImpl implements Company{
 //        return res;
         return employees.stream()
                 .map(Employee::calcSalary)
-                .reduce(0., (a,b) -> a + b);
+                .reduce(0., (a, b) -> a + b);
     }
 
     // O(1)
@@ -86,7 +87,7 @@ public class CompanySetImpl implements Company{
                 .filter(e -> e instanceof SalesManager)
                 .map(e -> (SalesManager) e)
                 .map(SalesManager::getSalesValue)
-                .reduce(0., (a,b) -> a + b);
+                .reduce(0., (a, b) -> a + b);
     }
 
     // O(n)
@@ -94,11 +95,13 @@ public class CompanySetImpl implements Company{
     public void printEmployees() {
         employees.forEach(e -> System.out.println(e));
     }
+
     // O(n)
     @Override
     public Employee[] findEmployeeHoursGreaterThan(int hours) {
         return findEmployeesByPredicate(e -> e.getHours() >= hours);
     }
+
     // O(n)
     @Override
     public Employee[] findEmployeeSalaryRange(int minSalary, int maxSalary) {
